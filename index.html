@@ -8,9 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  <!-- DISINI PERUBAHANNYA (CSS) -->
+  <link rel="stylesheet" href="css/style.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+  
+  <!-- DISINI PERUBAHANNYA (JS) -->
+  <script defer src="js/script.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -98,7 +103,7 @@
       <section class="about-panel" id="about">
         <div class="about-icon">⌁</div><div><p class="eyebrow">TENTANG PROYEK</p><h2>Komputasi untuk tantangan lokal</h2><p>FloodWatch merupakan prototipe studi kasus yang mengolah data curah hujan dan tinggi muka air untuk mengelompokkan tingkat risiko. Proyek ini terinspirasi dari materi HPC tentang pemanfaatan infrastruktur komputasi untuk membantu menyelesaikan masalah lokal.</p></div>
       </section>
-      <footer class="footer"><span>© 2026 FloodWatch Indonesia · Proyek akademik</span><span>Built with HTML, CSS, JavaScript & Python Flask</span></footer>
+      <footer class="footer"><span>© 2026 FloodWatch Indonesia · Proyek akademik</span><span>Built with HTML, CSS, JavaScript</span></footer>
     </main>
   </div>
 </body>
