@@ -133,18 +133,44 @@ function renderAll(records) {
   renderTable(records);
 }
 
+// Fungsi parse CSV sederhana untuk Static Website
+function parseCSV(text) {
+  const lines = text.trim().split("\n");
+  if (lines.length === 0) return [];
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const currentLine = lines[i].split(",");
+    if (currentLine.length === headers.length) {
+      const obj = {};
+      for (let j = 0; j < headers.length; j++) {
+        let val = currentLine[j].trim().replace(/^"|"$/g, "");
+        if (!isNaN(val) && val !== "") val = Number(val);
+        obj[headers[j]] = val;
+      }
+      result.push(obj);
+    }
+  }
+  return result;
+}
+
 async function loadData() {
   const selectedLocation = $("#locationFilter").value || "Semua lokasi";
   $("#observationRows").innerHTML = '<tr><td colspan="5" class="loading-cell">Memuat data...</td></tr>';
   try {
-    const response = await fetch(`/api/data?lokasi=${encodeURIComponent(selectedLocation)}`);
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Gagal mengambil data.");
-    allRecords = result.data || [];
+    // Membaca file CSV langsung dari folder data/
+    const response = await fetch('data/flood_data.csv');
+    if (!response.ok) throw new Error("Gagal mengambil file CSV.");
+    const csvText = await response.text();
+    const parsedData = parseCSV(csvText);
 
+    allRecords = parsedData;
+
+    // Ambil daftar lokasi unik untuk dropdown filter
+    const locations = [...new Set(parsedData.map(item => item.lokasi))];
     const locationSelect = $("#locationFilter");
     const previous = locationSelect.value;
-    const locations = result.locations || [];
+    
     if (locationSelect.options.length <= 1) {
       locations.forEach(location => {
         const option = document.createElement("option");
@@ -154,10 +180,16 @@ async function loadData() {
       });
       if (locations.includes(previous)) locationSelect.value = previous;
     }
-    renderAll(allRecords);
+
+    // Filter data berdasarkan lokasi yang dipilih
+    const filteredRecords = selectedLocation === "Semua lokasi" 
+      ? allRecords 
+      : allRecords.filter(item => item.lokasi === selectedLocation);
+
+    renderAll(filteredRecords);
   } catch (error) {
     $("#observationRows").innerHTML = `<tr><td colspan="5" class="empty-state">Gagal memuat data. ${escapeHtml(error.message)}</td></tr>`;
-    $("#tableInfo").textContent = "Periksa server Flask dan file dataset.";
+    $("#tableInfo").textContent = "Periksa keberadaan file data/flood_data.csv.";
   }
 }
 
