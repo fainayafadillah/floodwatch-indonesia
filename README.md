@@ -56,20 +56,16 @@ Pastikan Python 3.10 atau lebih baru sudah terpasang.
 ## Struktur folder
 ```text
 floodwatch-indonesia/
-├── app.py
-├── requirements.txt
+├── css
+   ├── style.css
 ├── README.md
-├── .gitignore
 ├── data/
-│   └── flood_data.csv
-├── templates/
-│   └── index.html
-└── static/
-    ├── css/
-    │   └── style.css
-    └── js/
-        └── script.js
-```
+   └── flood_data.csv
+├── js
+   └── script.js
+├── README.md
+├── index.html
+ 
 
 ## Dataset dan keterbatasan
 `data/flood_data.csv` berisi data ilustrasi/simulasi untuk menguji aplikasi, bukan pengukuran sungai aktual dan bukan data real-time. Ambang klasifikasi di `app.py` juga hanya contoh. Untuk pemakaian nyata, gunakan data dari sumber yang dapat diverifikasi, tentukan ambang bersama pihak berwenang/ahli hidrologi, dan validasi model dengan data historis.
