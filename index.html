@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FloodWatch Indonesia - dashboard analisis risiko banjir dari data curah hujan dan tinggi muka air.">
+  <title>FloodWatch Indonesia | Flood Risk Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="FloodWatch beranda">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2M3 19c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2M12 2.5C9.4 6 7.8 8 7.8 10.1a4.2 4.2 0 0 0 8.4 0C16.2 8 14.6 6 12 2.5Z"/></svg></span>
+        <span><strong>FloodWatch</strong><small>INDONESIA MONITORING</small></span>
+      </a>
+      <div class="nav-label">MENU UTAMA</div>
+      <nav class="navigation" aria-label="Navigasi utama">
+        <a class="nav-link active" href="#dashboard"><span class="nav-icon">▦</span> Dashboard</a>
+        <a class="nav-link" href="#trend"><span class="nav-icon">⌁</span> Analisis Data</a>
+        <a class="nav-link" href="#observations"><span class="nav-icon">☷</span> Data Pengamatan</a>
+        <a class="nav-link" href="#about"><span class="nav-icon">ⓘ</span> Tentang Proyek</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-info">
+          <span class="info-icon">i</span>
+          <div><strong>Informasi data</strong><p>Dashboard ini menggunakan data simulasi untuk demonstrasi.</p></div>
+        </div>
+        <div class="sidebar-foot"><span class="status-dot"></span> PROTOTIPE AKADEMIK <span class="version">v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button>
+        <div class="breadcrumb">FloodWatch <span>/</span> <strong>Dashboard</strong></div>
+        <div class="topbar-right"><span class="live-pill"><span class="status-dot"></span> MODE DEMO</span><div class="avatar">FW</div></div>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">FLOOD MONITORING SYSTEM</p>
+          <h1>Flood Risk Dashboard</h1>
+          <p class="subtitle">Pantau kondisi curah hujan dan tinggi muka air dalam satu tampilan.</p>
+        </div>
+        <label class="location-select"><span>Lokasi pemantauan</span>
+          <select id="locationFilter" aria-label="Pilih lokasi"><option value="Semua lokasi">Semua lokasi</option></select>
+        </label>
+      </section>
+
+      <div class="notice" role="note"><span class="notice-symbol">ⓘ</span><p><strong>Data demonstrasi.</strong> Angka pada dashboard merupakan data simulasi, bukan pengukuran real-time atau dasar peringatan bencana.</p><button id="dismissNotice" aria-label="Tutup pemberitahuan">×</button></div>
+
+      <section class="metrics-grid" aria-label="Ringkasan data">
+        <article class="metric-card">
+          <div class="metric-top"><span class="metric-label">Curah Hujan Terakhir</span><span class="metric-icon rain-icon">☂</span></div>
+          <div class="metric-value"><span id="rainValue">—</span><small>mm</small></div>
+          <div class="metric-bottom"><span class="metric-caption">Periode pengamatan</span><span class="metric-tag" id="rainTag">Data CSV</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top"><span class="metric-label">Tinggi Muka Air</span><span class="metric-icon water-icon">≈</span></div>
+          <div class="metric-value"><span id="waterValue">—</span><small>cm</small></div>
+          <div class="metric-bottom"><span class="metric-caption">Pengukuran terakhir</span><span class="metric-tag">Muka air</span></div>
+        </article>
+        <article class="metric-card risk-metric">
+          <div class="metric-top"><span class="metric-label">Status Risiko</span><span class="metric-icon risk-icon">!</span></div>
+          <div class="metric-value risk-value"><span class="risk-indicator" id="riskDot"></span><span id="riskValue">Memuat...</span></div>
+          <div class="metric-bottom"><span class="metric-caption" id="riskDescription">Berdasarkan aturan demo</span><span class="metric-tag" id="riskTag">Analisis</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top"><span class="metric-label">Jumlah Pengamatan</span><span class="metric-icon count-icon">▤</span></div>
+          <div class="metric-value"><span id="recordValue">—</span><small>data</small></div>
+          <div class="metric-bottom"><span class="metric-caption">Data pada filter terpilih</span><span class="metric-tag">Riwayat</span></div>
+        </article>
+      </section>
+
+      <section class="charts-grid" id="trend">
+        <article class="panel chart-panel">
+          <div class="panel-heading"><div><h2>Tren Tinggi Muka Air</h2><p>Perubahan tinggi air dari waktu ke waktu</p></div><span class="chart-badge blue-badge">cm</span></div>
+          <div class="chart-wrap"><canvas id="waterChart" aria-label="Grafik tren tinggi muka air"></canvas></div>
+        </article>
+        <article class="panel chart-panel">
+          <div class="panel-heading"><div><h2>Curah Hujan</h2><p>Distribusi curah hujan per pengamatan</p></div><span class="chart-badge teal-badge">mm</span></div>
+          <div class="chart-wrap"><canvas id="rainChart" aria-label="Grafik curah hujan"></canvas></div>
+        </article>
+      </section>
+
+      <section class="panel observations-panel" id="observations">
+        <div class="panel-heading observations-heading"><div><h2>Data Pengamatan</h2><p>Riwayat data yang digunakan dalam analisis</p></div><span class="record-count" id="tableCount">0 catatan</span></div>
+        <div class="table-scroll"><table><thead><tr><th>WAKTU PENGAMATAN</th><th>LOKASI</th><th>CURAH HUJAN</th><th>TINGGI AIR</th><th>STATUS RISIKO</th></tr></thead><tbody id="observationRows"><tr><td colspan="5" class="loading-cell">Memuat data...</td></tr></tbody></table></div>
+        <div class="table-footer"><span id="tableInfo">Data contoh untuk demonstrasi.</span><button class="text-button" id="downloadCsv">Unduh data CSV ↓</button></div>
+      </section>
+
+      <section class="about-panel" id="about">
+        <div class="about-icon">⌁</div><div><p class="eyebrow">TENTANG PROYEK</p><h2>Komputasi untuk tantangan lokal</h2><p>FloodWatch merupakan prototipe studi kasus yang mengolah data curah hujan dan tinggi muka air untuk mengelompokkan tingkat risiko. Proyek ini terinspirasi dari materi HPC tentang pemanfaatan infrastruktur komputasi untuk membantu menyelesaikan masalah lokal.</p></div>
+      </section>
+      <footer class="footer"><span>© 2026 FloodWatch Indonesia · Proyek akademik</span><span>Built with HTML, CSS, JavaScript & Python Flask</span></footer>
+    </main>
+  </div>
+</body>
+</html>
