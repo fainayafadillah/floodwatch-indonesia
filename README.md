@@ -51,7 +51,7 @@ Pastikan Python 3.10 atau lebih baru sudah terpasang.
    python app.py
    ```
 
-6. Buka `http://127.0.0.1:5000` di browser.
+6. Buka https://fainayafadillah.github.io/floodwatch-indonesia/#dashboard di browser.
 
 ## Struktur folder
 ```text
